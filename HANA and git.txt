@@ -10,9 +10,9 @@ Git
 ===
 fetch:				- remote version to local
 
-git config --global user.name "Yves Zhang"            	«--???????
-git config --global user.email yves.zhang@sap.com	«--???????
-git config --global color.ui true					- ????
+git config --global user.name "Yves Zhang"            	
+git config --global user.email yves.zhang@sap.com	
+git config --global color.ui true					- tell other your identify
 git clone ssh://i063150@hdbgerrit.wdf.sap.corp:29418/hana newcode 	- copy resposity from ssh to newcode 
 
 git status 						- look the lastest status of changes
