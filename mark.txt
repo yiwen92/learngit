@@ -1,0 +1,83 @@
+Buildserver/env:
+================
+setenv WD /storm2_work2/yvesz/asetraining/				Workdir, with "data","log" and interfaces
+setenv SYBASE /remote/lnxcorona_bld2/yvestest/Ase/asecorona		Release location, the $DES of perl
+setenv DSVR $SYBASE/$SYBASE_ASE/bin/diagserver				The boot server, diagserver can use gdb
+
+Release link:
+perl /calm/svr/sql/generic/tools/link_to_release.pl  $SRC $DES		perl script <releasepath> <destinationpath>
+
+
+Create view and ccset for modify code:
+======================================
+calm -v asecoronabtrim_yvesz_vu						go into view of btrim
+e2 create -qoff <Viewname>						only change code in local without checkin
+e2 create <CR#>								
+ct co -unres $DBMS/generic/source/dbcc/exec_dbcc.c			check out the code with unreserved, then can modify '$DBMS/generic/source/dbcc/exec_dbcc.c'	
+ct unres $DBMS/generic/source/dbcc/exec_dbcc.c				change the status of '$DBMS/generic/source/dbcc/exec_dbcc.c' to unreserve
+ct help | tee <ct_help>							list ct commands both on screen and <ct_help> file
+ct lsh -nco $DBMS/generic/source/dbcc/exec_dbcc.c |tee his		show the change history of '$DBMS/generic/source/dbcc/exec_dbcc.c' and put into his file
+
+Gdb mode: for debug program in linux:
+=====================================
+gdb									come into a matched view and for diagserver mode
+attach <No.>								attach ps of diagserver
+b <func>								break point at the function
+b <file.c>:<line No.>							break point at the line No. of file.c
+b ex_imminent								go to the hang place of dbcc 2901
+watch <var/*addr>							break when var/*addr's value changed
+info b									show break point details
+disa/ena <No.x>								disable/enable the No.x breakpoint
+c									continue to next break point
+n									next step
+s									go into the function
+p <var>									print var value
+set <var> = 0								set var value = 0
+enter									repeat lastest command
+bt 									show the stack traces detail. backtrace 2/-2(first/last 2)
+up/down <No.x>								go up/down x traces to the func
+frame <No.x>								go to No.x trace's func
+list									show code below
+focus									show code window up
+x/100c sqlbuf								print 100 chars of sqlbuf structure
+
+
+Sybmon mode: look data structure of ASE
+=======================================
+cd $SYBASE								must come into SYBASE dir
+$DSVR -X -Pquine							find the build server
+cat .									show sth 
+attach 0								attach the bootase(the No. is 0)
+who									details of sessions with spid
+help 									show commands in sybmon mode
+buffer/page/keptbufs/log/recvbuf/locks ?				show patten of buffer/page/keptbufs/log/recvbuf/locks commands
+page 2396 1 4								like dbcc page(1,2396,4)								
+recvbuf <spid>
+locks <spid>
+stack <spid>
+
+Dbcc: Database consystem check(session)
+dbcc traceon(3604)							show details log in screen
+dbcc traceon(2901)							look stack and stay hang 
+
+
+Build codes after modified code:
+=================================
+setenv SSBUILT $DES							choose <destinationpath> for SSBUILT(full build)
+~jih/bin/build1.sh > & build.out &					excute build script, then information(include errorlogs) put into build.out, back ground
+tail -f build.out							update show build.out's tail					
+or use barrier new session of the CR & view				recommand this easy way
+
+
+Show information:
+=================
+h									show history commands details
+!<No.command>								execute <No.command> command in history list
+ps x									show processes details
+kill -9 <No.pid>							kill the <No.pid> process with force
+
+
+calm view:
+==========
+ct lsh -nco $DBMS/generic/source/dbcc/exec_dbcc.c > exec_dbcc.his 	show the modified history log of '$DBMS/generic/source/dbcc/exec_dbcc.c' and write into 'exec_dbcc.his'
+ct lsh -nco $DBMS/generic/source/dbcc/exec_dbcc.c | less(head,tail) 

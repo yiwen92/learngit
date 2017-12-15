@@ -1,0 +1,58 @@
+Privilege:
+=========
+sudo su -			- go into root view, then pwd
+id i335364			- look up the privilege
+du -hcs /home/*			- look the used space of * in /home directory
+df -hk /data 			- 
+
+
+Git
+===
+fetch:				- remote version to local
+
+git config --global user.name "Yves Zhang"            	«--???????
+git config --global user.email yves.zhang@sap.com	«--???????
+git config --global color.ui true					- ????
+git clone ssh://i063150@hdbgerrit.wdf.sap.corp:29418/hana newcode 	- copy resposity from ssh to newcode 
+
+git status 						- look the lastest status of changes
+git pull						- finde the newest branch and do auto-merge
+
+
+Login:
+=====
+z01adm
+sybase123
+hdbsql -i 04 -u SYSTEM -p Sybase123
+
+debug Server:
+==========
+z04adm
+sybase123
+hdbsql -i 02 -u SYSTEM -p Sybase123
+
+/usr/bin/gdb
+unset PYTHONHOME 
+ 
+
+
+
+System info:
+===========
+hdbcons
+dvol info
+ut list
+table m -c Ox...(container ID)
+
+HANA:
+=====
+Create table T3 with page loadable columns C3, C4, and C5.
+CREATE COLUMN TABLE T3 (C1 INT PRIMARY KEY, C2 DATE, C3 VARCHAR(80) PAGE LOADABLE NOT NULL, C4 VARCHAR(5000) PAGE 
+
+INSERT INTO T3 VALUES (1)
+
+LOAD T3 ALL
+
+CREATE COLUMN TABLE A (A INT, B INT);
+INSERT INTO A VALUES(1,2
+LOAD A all;
