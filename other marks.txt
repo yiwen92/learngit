@@ -1,0 +1,127 @@
+serverbuild ??build platform ?? linuxamd64_smp
+perl  /calm/svr/sql/generic/tools/link_to_release.pl     source_release     dest_dir
+setenv DSVR $SYBASE/$SYBASE_ASE/bin/diagserver 
+
+calm –v 157xview
+perl $DBMS/generic/tools/linkto…pl    157_release_link <local 157 releae dir>
+edit ur env file
+setenv SYBASE <local 157 releae dir>
+source ….env
+
+/usr/u/yli3/zip_code
+./zip_code  
+
+
+mkdir -p xx/xx/xx		make dirs without one by one
+
+rm -rf dir			delete dir's all without request
+cp -r dir1 dir2			copy all files in dir1 to dir2
+vi -t function			vi the function in a view
+man cp/ls			help command cp/ls/...
+grep -nr "replicate" ./*	find "replicate" in this folder, -n show number, -r recursive	
+find ./ -name sql.c -print 	find "sql.c" from current folder 
+vim diff <file1> <file2>	compare file1 and file2,open file2 as a sample in the right.
+do 				modify file1 as file2 at the cursor place
+ctrl + u			delete one row command
+quasr setup -config config_806874 -testset testset -newres -v | tee ./setup.log		print info to setup.log in current dir
+
+bcp pubs2..publishers out /linuxstore2_work2/yvesz/work/bcp_out -Usa -P -Syvesz
+bcp test..bcp_in in /linuxstore2_work2/yvesz/work/bcp_out -Usa -P -Syvesz -f /linuxstore2_work2/yvesz/work/pub_form
+
+sp_spaceused					the space used of the database
+sp_who						??running?spid,????dbname?tempdbname
+sp_depends t1					find procedure/index/view information about table t1
+select db_name()				now the database you are in
+select object_id("yves")			print object yves's id
+
+sp_helpsort					print charset/sort options
+sp_configure 'default sortorder id',21		sort order change
+sp_configure "default character set id", 190
+
+
+/* sql commands */
+=========================================
+create table yves(a int) [lock datapages]		create a table name 'yves' with a int coloumn 'a', [lock datapages] DOL page
+create table t1(col1 char(30),col2 char(30),		create a table name 't1' with 2 columns and a unique clustered index on col1
+unique clustered (col1)) lock datarows			create a table name 't1' with 2 columns and a unique clustered index on col1
+
+create [unique][clustered] index y1 on yves(a)		create an (unique/clustered) index of coloumn 'a' name 'y1' on table 'yves'
+insert into wcao values(2)
+alter database master on default = '3'			add 3M space to master
+alter table t1 lock datapages				change table 't1' from lock datarows to lock datapages			
+
+update t1 set col4 = 'column' where col2 < 10		modify data
+
+
+alter table t1 add col4 char(3) null			add column 'col4' in 't1'
+alter table t1 modify col4 varchar(20)			change 'col4' type in 't1'
+
+/* quasr */
+======================================================================
+Should used in calm view and come into cd ~/quasr and vi the quasr.env
+source quasr.env
+quasr setup -config <config file> -testset <testset name> -newres -v    should change some parameters, such as "sql_server -dataserver_path", and ps can be found in "machine -name"
+quasr exec
+quasr release
+quasr restart
+setenv QUASR_TESTS /view/asecoronabtrim_fgao_vu/calm/svr/qtst 		set up QUASR_TESTS if you need use other's view
+rm -r .quasr								clean up hidden file and environment 
+quasr_rsm show session -username yvesz 					show the session used by user yvesz
+quasr_rsm delete session -session_id xxxxx				delete the unused quasr session for resource free
+
+/remote/aseqa_archive2/asecarina/linuxamd64_smp/release/OCS-15_0/bin/isql -Usa -P -Sstor0_157351 -I/storm2_work2/quasrspace1/s30728405/sql_se0/interfaces
+/remote/aseqa_archive2/asecarina/linuxamd64_smp/release/OCS-15_0/bin/isql -Usa -P -S "storm2:11015"
+
+cd /calm/svr/qtst/testsets						how to find a testset of barrier
+vi xxx in barrier report
+
+
+out put
+log on <logfile> 
+...  							In sybmon mode, record between 
+log off							
+con -i <file.sql> -o <logfile>				In server mode, record input file.sql output to logfile
+
+
+Data insert procedure:
+create table t1 (col1 char(254),  col2 int,  col3 varchar(30) ) lock datapages
+create proc proc_insert_t1                                               
+                                                @rowstart int, @munrow int 
+         as  
+         declare @maxrow int, @rowcount int, @new_v1 char(254), @new_v2 int, @new_v3 char(30)
+         select @rowcount = @rowstart
+         select @maxrow = @munrow
+         while (@rowcount < @munrow)
+             begin
+               select @new_v1 = convert (char(254),@rowcount)
+               select @new_v2 = @rowcount
+               select @new_v3 = 'this is row: ' + convert (char(10),@rowcount)
+               insert into t1 values (@new_v1, @new_v2,  @new_v3)
+               select @rowcount = @rowcount + 1 
+             end 
+go
+exec proc_insert_t1 @rowstart=0, @munrow = 70
+go 
+========================
+create proc proc_insert_apl
+                                                @rowstart int, @munrow int
+         as
+         declare @maxrow int, @rowcount int,@new_v0 int, @new_v1 varchar(10), @new_v2 int, @new_v3 char(300)
+         select @rowcount = @rowstart
+         select @maxrow = @munrow
+         while (@rowcount < @munrow)
+             begin
+               select @new_v0 = @rowcount
+               select @new_v1 = convert (varchar(10),@rowcount)
+               select @new_v2 = null
+               select @new_v3 = 'this is row: ' + convert (char(10),@rowcount)
+               insert into apl values (@new_v0,@new_v1, @new_v2,  @new_v3)
+               select @rowcount = @rowcount + 1
+             end
+
+vi configure
+==============
+:set nonu
+:set nopaste
+
+
