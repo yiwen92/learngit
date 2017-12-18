@@ -14,9 +14,11 @@ git config --global user.name "Yves Zhang"            	 - tell other your identi
 git config --global user.email yves.zhang@sap.com	
 git config --global color.ui true					
 git clone ssh://i063150@hdbgerrit.wdf.sap.corp:29418/hana newcode 	- copy resposity from ssh to newcode 
+git remote add origin git@github.com:yiwen/learngit.git			- link current local branch to remote
+git push -u origin master						- push master to remote branch origin
 
 git status 						- look the lastest status of changes
-git pull						- finde the newest branch and do auto-merge
+git pull						- find the newest branch and do auto-merge
 
 
 Login:
